@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "b5e8d9f2-3c4a-4b5d-9e8f-1a2b3c4d5e6f",
+		"name": "Hotel Booking Service",
+		"description": "API collection for testing hotel booking service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Order - Success",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hotel_id\": \"reddison\",\n    \"room_id\": \"lux\",\n    \"email\": \"guest@mail.ru\",\n    \"from\": \"2024-01-02T00:00:00Z\",\n    \"to\": \"2024-01-04T00:00:00Z\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/orders",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["orders"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order - No Availability",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hotel_id\": \"reddison\",\n    \"room_id\": \"lux\",\n    \"email\": \"guest@mail.ru\",\n    \"from\": \"2024-01-05T00:00:00Z\",\n    \"to\": \"2024-01-06T00:00:00Z\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/orders",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["orders"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order - Invalid Dates",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hotel_id\": \"reddison\",\n    \"room_id\": \"lux\",\n    \"email\": \"guest@mail.ru\",\n    \"from\": \"2024-01-04T00:00:00Z\",\n    \"to\": \"2024-01-02T00:00:00Z\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/orders",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["orders"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order - Missing Fields",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hotel_id\": \"reddison\",\n    \"email\": \"guest@mail.ru\",\n    \"from\": \"2024-01-02T00:00:00Z\",\n    \"to\": \"2024-01-04T00:00:00Z\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/orders",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["orders"]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"if (pm.response.code === 201) {",
+					"    pm.test(\"Order created successfully\", function () {",
+					"        pm.response.to.have.status(201);",
+					"        pm.response.to.be.json;",
+					"        var jsonData = pm.response.json();",
+					"        pm.expect(jsonData).to.have.property('hotel_id');",
+					"        pm.expect(jsonData).to.have.property('room_id');",
+					"        pm.expect(jsonData).to.have.property('email');",
+					"    });",
+					"}",
+					"",
+					"if (pm.response.code === 400) {",
+					"    pm.test(\"Validation error handled correctly\", function () {",
+					"        pm.response.to.have.status(400);",
+					"    });",
+					"}"
+				]
+			}
+		}
+	]
+}
